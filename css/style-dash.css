@@ -1,0 +1,133 @@
+/* --- Variáveis de Identidade Care Plus --- */
+:root {
+    --primary-blue: #002d5c;
+    --accent-blue: #00d1ff;
+    --light-gray: #f1f3f5;
+    --white: #ffffff;
+    --danger: #dc3545;
+    --warning: #ffc107;
+    --success: #198754;
+}
+
+/* --- Base e Layout --- */
+body {
+    background-color: var(--light-gray);
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    color: #333;
+    margin: 0;
+    padding-bottom: 50px;
+}
+
+/* Centralização do conteúdo principal */
+main.container-fluid {
+    margin-top: 20px;
+}
+
+/* --- Navbar (Consistente com o Index) --- */
+.navbar {
+    background-color: var(--primary-blue) !important;
+    padding: 0.8rem 0;
+}
+
+.navbar-brand {
+    font-weight: 700;
+    letter-spacing: 0.5px;
+}
+
+.nav-link {
+    font-weight: 500;
+    margin: 0 10px;
+    color: rgba(255, 255, 255, 0.8) !important;
+    transition: all 0.3s ease;
+}
+
+.nav-link:hover {
+    color: var(--white) !important;
+}
+
+.nav-link.active {
+    color: var(--white) !important;
+    border-bottom: 2px solid var(--accent-blue);
+}
+
+/* --- Cards de Estatísticas --- */
+.stat-card {
+    border: none;
+    border-radius: 12px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Bordas coloridas para os cards de destaque */
+.border-critico { border-left: 5px solid var(--danger); }
+.border-total { border-left: 5px solid var(--primary-blue); }
+.border-estavel { border-left: 5px solid var(--success); }
+
+/* --- Seção de Gráficos --- */
+.chart-container {
+    background: var(--white);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    margin-bottom: 25px;
+}
+
+/* --- Tabela de Pacientes --- */
+.card-table {
+    border: none;
+    border-radius: 15px;
+    overflow: hidden; /* Garante que as bordas arredondadas funcionem na tabela */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.table thead {
+    background-color: #f8f9fa;
+}
+
+.table th {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: #6c757d;
+    font-weight: 600;
+    letter-spacing: 1px;
+    padding: 15px;
+}
+
+.table td {
+    padding: 15px;
+    vertical-align: middle;
+}
+
+/* Estilo para a predição da IA na tabela */
+.ia-prediction {
+    font-style: italic;
+    font-weight: 500;
+    color: var(--primary-blue);
+}
+
+/* Status Badges Customizados */
+.badge-status {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 600;
+    font-size: 0.75rem;
+}
+
+/* --- Botões --- */
+.btn-success {
+    background-color: var(--success);
+    border: none;
+    font-weight: 600;
+    padding: 10px 20px;
+    border-radius: 8px;
+}
+
+.btn-success:hover {
+    background-color: #146c43;
+    box-shadow: 0 4px 8px rgba(25, 135, 84, 0.3);
+}

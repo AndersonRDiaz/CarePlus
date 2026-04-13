@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Care Plus - Triagem Inteligente</title>
+    <link rel="icon" type="image/png" href="img/logo-carePlus.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark shadow-sm mb-4" style="background-color: #002d5c;">
+                    <div class="container-fluid">
+                        <div class="row justify-content-center w-100">
+                            <div class="col-lg-10 d-flex justify-content-between align-items-center">
+                                <div class="collapse navbar-collapse" id="navbarNav">
+                                    <ul class="navbar-nav ms-auto">
+                                        <li class="nav-item">
+                                            <a class="nav-link active" href="index.html">📋 Nova Triagem</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="dashboard.html">📊 Dashboard</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" href="historico.html">📂 Histórico</a>
+                                        </li>
+                                        <li class="nav-item ms-lg-3">
+                                            <a class="btn btn-outline-light btn-sm mt-1" href="#">Logout</a>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+<div class="container mt-1 mb-1">      
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card main-card">
+                <div class="medical-header text-center">
+                    <div class="logo-container">
+                        <img src="img/logo-carePlus.png" alt="Logo Care Plus" style="max-width: 150px;">
+                    </div>  
+                    <h2>Sistema de Triagem Care Plus</h2>
+                    <p class="mb-0">Módulo de Coleta de Dados Preditivos</p>
+                </div>
+                <div class="card-body p-4">
+                    <form id="formTriagem">
+                        <div class="row">
+                            <div class="col-md-5 border-end">
+                                <section class="form-section">
+                                    <h5 class="section-title">Identificação</h5>
+                                    <div class="mb-3">
+                                        <label class="form-label">Nome Completo</label>
+                                        <input type="text" name="paciente_nome" class="form-control" required placeholder="Ex: João Silva">
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-6 mb-3">
+                                            <label class="form-label">Idade</label>
+                                            <input type="number" name="paciente_idade" class="form-control" required>
+                                        </div>
+                                        <div class="col-6 mb-3">
+                                            <label class="form-label">Sexo</label>
+                                            <select name="paciente_sexo" class="form-select">
+                                                <option value="M">Masculino</option>
+                                                <option value="F">Feminino</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </section>
+
+                                <section class="form-section mt-4">
+                                    <h5 class="section-title">Sinais Vitais</h5>
+                                    <div class="row">
+                                        <div class="col-6 mb-3">
+                                            <label class="form-label">Pressão (PA)</label>
+                                            <input type="text" name="sinal_pa" class="form-control" placeholder="120/80">
+                                        </div>
+                                        <div class="col-6 mb-3">
+                                            <label class="form-label">Temperatura (°C)</label>
+                                            <input type="number" step="0.1" name="sinal_temp" class="form-control" placeholder="36.5">
+                                        </div>
+                                        <div class="col-6 mb-3">
+                                            <label class="form-label">Saturação (%)</label>
+                                            <input type="number" name="sinal_sat" class="form-control" placeholder="98">
+                                        </div>
+                                        <div class="col-6 mb-3">
+                                            <label class="form-label">Batimentos (BPM)</label>
+                                            <input type="number" name="sinal_bpm" class="form-control" placeholder="75">
+                                        </div>
+                                    </div>
+                                </section>
+                            </div>
+
+                            <div class="col-md-7 px-4">
+                                <section class="form-section">
+                                    <h5 class="section-title">Avaliação Clínica</h5>
+                                    <div class="mb-6">
+                                        <label class="form-label d-flex justify-content-between">
+                                            Nível de Dor (0 a 10)
+                                            <span id="valorSelecionado" class="badge bg-primary"></span>
+                                        </label>
+                                        
+                                        <input type="range" name="dor_nivel" class="form-range" min="0" max="10" step="1" id="dorRange">
+                                        
+                                        <div class="pain-scale-numbers">
+                                            <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+                                            <span>6</span><span>7</span><span>8</span><span>9</span><span>10</span>
+                                        </div>
+
+                                        <div class="d-flex justify-content-between text-muted small mt-2">
+                                            <span class="text-success">Sem dor</span>
+                                            <span class="text-danger">Dor Máxima</span>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 mt-3">
+                                        <label class="form-label">Principais Sintomas</label>
+                                        <textarea name="queixa_principal" class="form-control" rows="5" placeholder="Descreva os sintomas detalhadamente..."></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Alergias / Observações</label>
+                                        <input type="text" name="alergias" class="form-control" placeholder="Nenhuma">
+                                    </div>
+                                </section>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg" id="btnEnviar">
+                                 Enviar para Análise da IA
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div id="statusArea" class="mt-3 text-center d-none">
+                <div class="alert alert-info shadow-sm" id="statusMensagem">
+                    Processando dados na IA...
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="./js/script.js"></script>
+</body>
+</html>
