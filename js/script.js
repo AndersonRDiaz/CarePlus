@@ -40,7 +40,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             // URL do seu Webhook no n8n (Substitua pela sua URL real)
-            const WEBHOOK_URL = 'http://localhost:5678/webhook/triagem';
+            
+            const WEBHOOK_URL = 'https://careplus.app.n8n.cloud/webhook-test/triagem';
 
             const response = await fetch(WEBHOOK_URL, {
                 method: 'POST',
