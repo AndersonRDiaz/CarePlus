@@ -8,18 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Atualiza o valor visual da dor no formulário
     dorRange.addEventListener('input', (e) => {
-        valorDor.textContent = e.target.value;
+        valorDor.textContent = e.target.value; // Corrigido para usar a variável correta
     });
-
-    dorRange.addEventListener('input', (event) => {
-    // Pega o valor onde a bolinha está (0 a 10)
-    const valor = event.target.value;
-    
-    // Atualiza o texto do badge para o usuário ver
-    displayValor.textContent = valor;
-    
-    });
-
 
     // Manipulação do envio do formulário
     form.addEventListener('submit', async (e) => {
@@ -27,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Feedback visual de carregamento
         btnEnviar.disabled = true;
+        btnEnviar.textContent = 'Processando...';
         statusArea.classList.remove('d-none');
         statusMensagem.className = 'alert alert-info shadow-sm';
         statusMensagem.textContent = 'Enviando dados para o n8n e processando IA...';
@@ -34,53 +25,45 @@ document.addEventListener('DOMContentLoaded', () => {
         // Captura os dados do formulário
         const formData = new FormData(form);
         const payload = Object.fromEntries(formData.entries());
-
-        // Adiciona um timestamp de criação
         payload.data_criacao = new Date().toISOString();
 
         try {
-            // URL do seu Webhook no n8n (Substitua pela sua URL real)
-            
+            // URL do seu Webhook no n8n Cloud
             const WEBHOOK_URL = 'https://careplus.app.n8n.cloud/webhook-test/triagem';
 
             const response = await fetch(WEBHOOK_URL, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             });
 
             if (response.ok) {
-                const dados = await response.json(); // Pega o JSON {"analise": "..."} que configuramos no n8n
+                const dados = await response.json();
                 
                 const divResultado = document.getElementById('resultado-ia');
                 const textoAnalise = document.getElementById('texto-analise');
 
-                // Faz a div aparecer
+                // Exibe o card de resultado da IA
                 divResultado.style.display = 'block';
-
-                // Insere o texto que a IA gerou
                 textoAnalise.innerHTML = dados.analise;
 
-                // Limpa o erro anterior, se houver
-                document.getElementById('mensagem-erro').style.display = 'none'; 
+                // Esconde a área de status/erro
+                statusArea.classList.add('d-none');
                 
-                // Faz scroll automático para o resultado
                 divResultado.scrollIntoView({ behavior: 'smooth' });
+                form.reset();
+                valorDor.textContent = '5'; // Reseta o contador de dor visual
             } else {
-                // Se der erro (como o erro de conexão que aparece na tua foto)
-                const erroDiv = document.getElementById('mensagem-erro');
-                erroDiv.style.display = 'block';
-                erroDiv.textContent = "Erro: Não foi possível obter a análise da IA.";
+                throw new Error('Erro na resposta do n8n');
             }
 
         } catch (error) {
-            console.error('Erro de conexão:', error);
+            console.error('Erro:', error);
             statusMensagem.className = 'alert alert-danger shadow-sm';
-            statusMensagem.textContent = 'Error: Não foi possível conectar ao n8n';
+            statusMensagem.textContent = 'Erro: Não foi possível conectar ao n8n.';
         } finally {
             btnEnviar.disabled = false;
+            btnEnviar.textContent = 'Enviar para Análise da IA';
         }
     });
 });
