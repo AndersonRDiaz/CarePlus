@@ -51,24 +51,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify(payload)
             });
 
-            // Dentro do seu if (response.ok)
             if (response.ok) {
-                const dados = await response.json();
+                const dados = await response.json(); // Pega o JSON {"analise": "..."} que configuramos no n8n
                 
                 const divResultado = document.getElementById('resultado-ia');
                 const textoAnalise = document.getElementById('texto-analise');
 
-                // 1. Remove a classe 'd-none' para a div aparecer
-                divResultado.classList.remove('d-none');
+                // Faz a div aparecer
+                divResultado.style.display = 'block';
 
-                // 2. Coloca o texto da IA (que vem do n8n) dentro do parágrafo
-                // O .replace ajuda a manter as quebras de linha
-                textoAnalise.innerHTML = dados.analise.replace(/\n/g, '<br>');
+                // Insere o texto que a IA gerou
+                textoAnalise.innerHTML = dados.analise;
 
-                // 3. Rola a página suavemente até o resultado
+                // Limpa o erro anterior, se houver
+                document.getElementById('mensagem-erro').style.display = 'none'; 
+                
+                // Faz scroll automático para o resultado
                 divResultado.scrollIntoView({ behavior: 'smooth' });
             } else {
-                throw new Error('Falha na resposta do servidor');
+                // Se der erro (como o erro de conexão que aparece na tua foto)
+                const erroDiv = document.getElementById('mensagem-erro');
+                erroDiv.style.display = 'block';
+                erroDiv.textContent = "Erro: Não foi possível obter a análise da IA.";
             }
 
         } catch (error) {
