@@ -51,17 +51,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify(payload)
             });
 
+            // Dentro do seu if (response.ok)
             if (response.ok) {
-                statusMensagem.className = 'alert alert-success shadow-sm';
-                statusMensagem.textContent = '✅ Sucesso! Triagem realizada e salva no banco de dados.';
-                form.reset();
-                valorDor.textContent = '5';
+                const dados = await response.json();
                 
-                // Esconde o alerta após 5 segundos
-                setTimeout(() => {
-                    statusArea.classList.add('d-none');
-                }, 5000);
+                const divResultado = document.getElementById('resultado-ia');
+                const textoAnalise = document.getElementById('texto-analise');
 
+                // 1. Remove a classe 'd-none' para a div aparecer
+                divResultado.classList.remove('d-none');
+
+                // 2. Coloca o texto da IA (que vem do n8n) dentro do parágrafo
+                // O .replace ajuda a manter as quebras de linha
+                textoAnalise.innerHTML = dados.analise.replace(/\n/g, '<br>');
+
+                // 3. Rola a página suavemente até o resultado
+                divResultado.scrollIntoView({ behavior: 'smooth' });
             } else {
                 throw new Error('Falha na resposta do servidor');
             }
@@ -69,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error('Erro de conexão:', error);
             statusMensagem.className = 'alert alert-danger shadow-sm';
-            statusMensagem.textContent = '❌ Erro: Não foi possível conectar ao n8n. Verifique se o Docker está rodando.';
+            statusMensagem.textContent = 'Error: Não foi possível conectar ao n8n';
         } finally {
             btnEnviar.disabled = false;
         }
