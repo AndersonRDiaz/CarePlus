@@ -37,31 +37,38 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify(payload)
             });
 
-            if (response.ok) {
-                // Como você enviou o output direto, o 'dados' já é o texto ou um objeto simples
-                const dados = await response.json();
-                
-                const divResultado = document.getElementById('resultado-ia');
-                const textoAnalise = document.getElementById('texto-analise');
+        if (response.ok) {
+            const dados = await response.json();
+            console.log("O que o n8n mandou:", dados);
+            
+            const textoAnalise = document.getElementById('texto-analise');
+            const divResultado = document.getElementById('resultado-ia');
+            const statusArea = document.getElementById('statusArea');
 
-                divResultado.style.display = 'block';
-                
-                // Agora pegamos o campo 'output' que é o padrão do AI Agent
-                textoAnalise.innerHTML = dados.output || dados; 
+            // Define o resultado buscando em qualquer uma das chaves possíveis
+            const resultadoFinal = dados.output || dados.analise || (typeof dados === 'string' ? dados : JSON.stringify(dados));
 
-                statusArea.classList.add('d-none');
-                divResultado.scrollIntoView({ behavior: 'smooth' });
-            } else {
-                throw new Error('Erro na resposta do n8n');
-            }
+            // Exibe o resultado na tela
+            textoAnalise.innerHTML = resultadoFinal;
+            divResultado.style.display = 'block';
+            
+            // Esconde a barra de carregamento/erro
+            if (statusArea) statusArea.classList.add('d-none');
 
+            // Rola a tela suavemente até o resultado
+            divResultado.scrollIntoView({ behavior: 'smooth' });
+
+        } else {
+            throw new Error('Erro na resposta do servidor');
+        }
         } catch (error) {
             console.error('Erro:', error);
+            statusArea.classList.remove('d-none');
             statusMensagem.className = 'alert alert-danger shadow-sm';
-            statusMensagem.textContent = 'Erro: Não foi possível conectar ao n8n.';
+            statusMensagem.textContent = 'Erro ao processar a solicitação: ' + error.message;
         } finally {
             btnEnviar.disabled = false;
-            btnEnviar.textContent = 'Enviar para Análise da IA';
+            btnEnviar.textContent = 'Enviar';``
         }
     });
 });
