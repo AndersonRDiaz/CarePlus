@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             // URL do seu Webhook no n8n Cloud
-            const WEBHOOK_URL = 'https://careplus.app.n8n.cloud/webhook-test/triagem';
+            const WEBHOOK_URL = 'https://careplus.app.n8n.cloud/webhook/triagem';
 
             const response = await fetch(WEBHOOK_URL, {
                 method: 'POST',
@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const divResultado = document.getElementById('resultado-ia');
                 const textoAnalise = document.getElementById('texto-analise');
 
-                // Exibe o card de resultado da IA
+                // Exibe o card de resultado da IA```
                 divResultado.style.display = 'block';
                 textoAnalise.innerHTML = dados.analise;
 
