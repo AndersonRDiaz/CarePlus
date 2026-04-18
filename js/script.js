@@ -38,21 +38,19 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             if (response.ok) {
+                // Como você enviou o output direto, o 'dados' já é o texto ou um objeto simples
                 const dados = await response.json();
                 
                 const divResultado = document.getElementById('resultado-ia');
                 const textoAnalise = document.getElementById('texto-analise');
 
-                // Exibe o card de resultado da IA```
                 divResultado.style.display = 'block';
-                textoAnalise.innerHTML = dados.analise;
-
-                // Esconde a área de status/erro
-                statusArea.classList.add('d-none');
                 
+                // Agora pegamos o campo 'output' que é o padrão do AI Agent
+                textoAnalise.innerHTML = dados.output || dados; 
+
+                statusArea.classList.add('d-none');
                 divResultado.scrollIntoView({ behavior: 'smooth' });
-                form.reset();
-                valorDor.textContent = '5'; // Reseta o contador de dor visual
             } else {
                 throw new Error('Erro na resposta do n8n');
             }
