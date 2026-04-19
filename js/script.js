@@ -1,74 +1,87 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Seleção de elementos
     const form = document.getElementById('formTriagem');
     const dorRange = document.getElementById('dorRange');
-    const valorDor = document.getElementById('valorDor');
+    const valorDor = document.getElementById('valorSelecionado');
     const statusArea = document.getElementById('statusArea');
     const statusMensagem = document.getElementById('statusMensagem');
     const btnEnviar = document.getElementById('btnEnviar');
+    const textoAnalise = document.getElementById('texto-analise');
+    const divResultado = document.getElementById('resultado-ia');
 
-    // Atualiza o valor visual da dor no formulário
-    dorRange.addEventListener('input', (e) => {
-        valorDor.textContent = e.target.value; // Corrigido para usar a variável correta
-    });
+    // 1. Atualiza o valor visual da dor no formulário (Slider)
+    if (dorRange && valorDor) {
+        dorRange.addEventListener('input', (e) => {
+            valorDor.textContent = e.target.value;
+        });
+    }
 
-    // Manipulação do envio do formulário
-    form.addEventListener('submit', async (e) => {
-        e.preventDefault();
+    // 2. Manipulação do envio do formulário
+    if (form) {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
 
-        // Feedback visual de carregamento
-        btnEnviar.disabled = true;
-        btnEnviar.textContent = 'Processando...';
-        statusArea.classList.remove('d-none');
-        statusMensagem.className = 'alert alert-info shadow-sm';
-        statusMensagem.textContent = 'Enviando dados para o n8n e processando IA...';
-
-        // Captura os dados do formulário
-        const formData = new FormData(form);
-        const payload = Object.fromEntries(formData.entries());
-        payload.data_criacao = new Date().toISOString();
-
-        try {
-            // URL do seu Webhook no n8n Cloud
-            const WEBHOOK_URL = 'https://careplus.app.n8n.cloud/webhook/triagem';
-
-            const response = await fetch(WEBHOOK_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-
-        if (response.ok) {
-            const dados = await response.json();
-            console.log("O que o n8n mandou:", dados);
+            // Feedback visual de carregamento
+            btnEnviar.disabled = true;
+            btnEnviar.textContent = 'Processando...';
             
-            const textoAnalise = document.getElementById('texto-analise');
-            const divResultado = document.getElementById('resultado-ia');
-            const statusArea = document.getElementById('statusArea');
+            if (statusArea) {
+                statusArea.classList.remove('d-none');
+                statusMensagem.className = 'alert alert-info shadow-sm';
+                statusMensagem.textContent = 'Enviando dados e processando IA...';
+            }
 
-            // Define o resultado buscando em qualquer uma das chaves possíveis
-            const resultadoFinal = dados.output || dados.analise || (typeof dados === 'string' ? dados : JSON.stringify(dados));
+            // Captura os dados do formulário
+            const formData = new FormData(form);
+            const payload = Object.fromEntries(formData.entries());
+            payload.data_criacao = new Date().toISOString();
 
-            // Exibe o resultado na tela
-            textoAnalise.innerHTML = resultadoFinal;
-            divResultado.style.display = 'block';
-            
-            // Esconde a barra de carregamento/erro
-            if (statusArea) statusArea.classList.add('d-none');
+            try {
+                // URL de Produção do seu n8n
+                const WEBHOOK_URL = 'https://careplus.app.n8n.cloud/webhook/triagem-careplus-v2';
+                
+                const response = await fetch(WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
 
-            // Rola a tela suavemente até o resultado
-            divResultado.scrollIntoView({ behavior: 'smooth' });
+                if (response.ok) {
+                    const dados = await response.json();
+                    console.log("Resposta do n8n:", dados);
+                    
+                    // Busca o texto nas chaves enviadas pelo n8n
+                    const resultadoFinal = dados.analise || dados.Prediccao_IA || dados.output || "Análise concluída com sucesso.";
+                    
+                    // Exibe o resultado na tela
+                    if (textoAnalise && divResultado) {
+                        textoAnalise.innerText = resultadoFinal;
+                        divResultado.style.display = 'block';
+                        divResultado.scrollIntoView({ behavior: 'smooth' });
+                    }
 
-        } else {
-            throw new Error('Erro na resposta do servidor');
-        }
-        } catch (error) {
-            console.error('Erro:', error);
-            statusArea.classList.remove('d-none');
-            statusMensagem.className = 'alert alert-danger shadow-sm';
-            statusMensagem.textContent = 'Erro ao processar a solicitação: ' + error.message;
-        } finally {
-            btnEnviar.disabled = false;
-            btnEnviar.textContent = 'Enviar';``
-        }
-    });
+                    // Esconde a mensagem de "Processando"
+                    if (statusArea) statusArea.classList.add('d-none');
+
+                } else {
+                    // Trata erro 500 ou outros erros de servidor
+                    const errorData = await response.text();
+                    console.error("Erro no servidor:", errorData);
+                    throw new Error('O servidor da IA falhou. Verifique se o n8n está Ativo ou se a Groq atingiu o limite.');
+                }
+
+            } catch (error) {
+                console.error('Erro detalhado:', error);
+                if (statusArea && statusMensagem) {
+                    statusArea.classList.remove('d-none');
+                    statusMensagem.className = 'alert alert-danger shadow-sm';
+                    statusMensagem.textContent = 'Erro: ' + error.message;
+                }
+            } finally {
+                // Restaura o botão
+                btnEnviar.disabled = false;
+                btnEnviar.textContent = 'Enviar para Análise da IA';
+            }
+        });
+    }
 });
