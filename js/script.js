@@ -11,6 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 1. Atualiza o valor visual da dor no formulário (Slider)
     if (dorRange && valorDor) {
+        // Define o valor inicial para não começar vazio
+        valorDor.textContent = dorRange.value; 
+        
         dorRange.addEventListener('input', (e) => {
             valorDor.textContent = e.target.value;
         });
