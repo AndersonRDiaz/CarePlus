@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     // Exibe o resultado na tela
                     if (textoAnalise && divResultado) {
-                        textoAnalise.innerText = resultadoFinal;
+                        textoAnalise.innerHTML = resultadoFinal.replace(/\n/g, '<br>');
                         divResultado.style.display = 'block';
                         divResultado.scrollIntoView({ behavior: 'smooth' });
                     }
